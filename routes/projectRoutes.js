@@ -7,12 +7,22 @@ const router = express.Router();
 
 // 1. GET /api/projects
 // Obtener todos los proyectos visibles para el público.
-router.get('/', async (req, res) => {
+router.get('/', verifyToken, async (req, res) => { 
     try {
-        // Un usuario normal solo puede ver los proyectos marcados como isVisible: true
-        const projects = await Project.find({ isVisible: true }); 
+        let projects;
+        
+        // 🚨 AQUÍ ESTÁ EL CAMBIO CLAVE: Comprobar el rol
+        if (req.user.role === 'admin') {
+            // ADMIN: El admin ve ABSOLUTAMENTE todo
+            projects = await Project.find({}); 
+        } else {
+            // USUARIO NORMAL: Solo ve los proyectos con isVisible: true
+            projects = await Project.find({ isVisible: true }); 
+        }
+
         res.json(projects);
     } catch (error) {
+        // Si falla la verificación del token (401), se manejará aquí o en el middleware
         res.status(500).json({ message: 'Error al obtener proyectos.', error: error.message });
     }
 });
