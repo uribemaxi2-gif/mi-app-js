@@ -2,6 +2,7 @@ require('dotenv').config(); // Carga las variables de .env
 const express = require('express');
 const mongoose = require('mongoose');
 const userRoutes = require('./routes/userRoutes');
+const cors = require('cors'); // <--- ¡CRÍTICO! Añade esta línea
 
 // Importar las rutas (asumo que ya corregiste los nombres a projectRoutes.js)
 const authRoutes = require('./routes/authRoutes');
