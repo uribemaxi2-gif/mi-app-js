@@ -14,19 +14,10 @@ const PORT = process.env.PORT || 5000;
 // --- 1. Middlewares Globales ---
 // Middleware para aceptar JSON en el cuerpo de la petición
 app.use(cors({
-    origin: function (origin, callback) {
-        // Permitir peticiones sin origen (como Postman o CURL)
-        if (!origin) return callback(null, true); 
-        // Permitir solo si el origen está en nuestra lista de permitidos
-        if (allowedOrigins.indexOf(origin) === -1) {
-            var msg = 'La política CORS para este sitio no permite el acceso desde el Origen especificado.';
-            return callback(new Error(msg), false);
-        }
-        return callback(null, true);
-    },
-    methods: ['GET', 'POST', 'PUT', 'DELETE'], // Métodos permitidos
-    credentials: true, // Importante si manejas cookies o tokens en encabezados
+    origin: 'http://localhost:5173', // Solo tu frontend de desarrollo
+    methods: ['GET', 'POST', 'PUT', 'DELETE'],
     allowedHeaders: ['Content-Type', 'Authorization'],
+    credentials: true, // Esto es importante para el manejo de cookies/sesiones
 }));
 
 app.use(express.json());
