@@ -12,10 +12,24 @@ const app = express();
 // Usa el puerto del .env o el 5000 por defecto
 const PORT = process.env.PORT || 5000; 
 
+const allowedOrigins = [
+    'http://localhost:5173', // Para desarrollo local (opcional, pero útil)
+    
+    // CRÍTICO: Añadir el dominio https:// de Netlify
+    'https://mellifluous-marshmallow-66c079.netlify.app' 
+];
+
 // --- 1. Middlewares Globales ---
 // Middleware para aceptar JSON en el cuerpo de la petición
-app.use(cors({
-    origin: 'http://localhost:5173', // Solo tu frontend de desarrollo
+app.use(cors({ 
+    origin: function (origin, callback) {
+        // Permitir si no hay origen (para herramientas como Postman) o si está en la lista
+        if (!origin || allowedOrigins.indexOf(origin) !== -1) { 
+            callback(null, true);
+        } else {
+            callback(new Error('Not allowed by CORS'), false);
+        }
+    },
     methods: ['GET', 'POST', 'PUT', 'DELETE'],
     allowedHeaders: ['Content-Type', 'Authorization'],
     credentials: true, // Esto es importante para el manejo de cookies/sesiones
