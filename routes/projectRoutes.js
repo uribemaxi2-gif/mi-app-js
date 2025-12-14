@@ -7,7 +7,7 @@ const router = express.Router();
 
 // 1. GET /api/projects
 // Obtener todos los proyectos visibles para el público.
-router.get('/', verifyToken, async (req, res) => { 
+router.get('/', protect, async (req, res) => { 
     try {
         let projects;
         
